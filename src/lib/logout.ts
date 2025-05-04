@@ -1,5 +1,5 @@
 import { auth } from "@/lib/firebase";
 
-function logout() {
+export default function logout() {
   auth.signOut();
 }

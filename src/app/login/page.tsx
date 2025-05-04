@@ -17,7 +17,6 @@ export default function Login() {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithPopup(auth, provider);
-      router.push('/dashboard');
     } catch (err) {
       console.error(err);
     }
