@@ -36,7 +36,17 @@ export default function Dashboard() {
   }
 
   async function handleSave() {
-    const meta = await fetchMetadata(url);
+    const meta = await fetch("/api/metadata?url=" + url)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch metadata");
+        }
+        return res.json();
+      })
+      .catch((err) => {
+        console.error("Error fetching metadata:", err);
+        return { title: "Error fetching title", favicon: "" };
+      });
     const res = await fetch("/api/summary", {
       method: "POST",
       headers: {
