@@ -1,6 +1,5 @@
 "use client";
 
-import fetchMetadata from "@/lib/fetchMetadata";
 import { auth, db } from "@/lib/firebase";
 import {
   addDoc,
@@ -37,31 +36,27 @@ export default function Dashboard() {
 
   async function handleSave() {
     const meta = await fetch("/api/metadata?url=" + url)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch metadata");
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .catch((err) => {
         console.error("Error fetching metadata:", err);
         return { title: "Error fetching title", favicon: "" };
       });
-    const res = await fetch("/api/summary", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url }),
-    });
-    const { summary } = await res.json();
-    await addDoc(collection(db, "users", user?.uid!, "links"), {
-      url,
-      tag,
-      ...meta,
-      summary,
-      createdAt: new Date(),
-    });
+    const summaryRes = await fetch("/api/summary?url=" + url);
+    if (!summaryRes.ok) {
+      const error = await summaryRes
+        .json()
+        .catch(() => ({ message: "Invalid JSON" }));
+      console.error("API Error:", error.message || "Unknown error");
+    } else {
+      const summary = JSON.parse(await summaryRes.text()).summary;
+      await addDoc(collection(db, "users", user?.uid!, "links"), {
+        url,
+        tag,
+        summary,
+        ...meta,
+        createdAt: new Date(),
+      });
+    }
     setUrl("");
     setTag("");
     loadBookMarks();

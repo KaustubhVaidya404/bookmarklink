@@ -15,8 +15,6 @@ export async function GET(req: Request) {
             "Content-Type": "application/json",
         },
         });
-    
-        console.error("Failed to fetch metadata:", res.statusText);
 
         if (!res.ok) {
         throw new Error("Failed to fetch metadata");

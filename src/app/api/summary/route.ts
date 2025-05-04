@@ -1,21 +1,20 @@
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-  const { url } = await req.json();
-  const summaryRes = await fetch(`https://r.jina.ai/${url}`
-    , {
-    method: "POST",
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const url = searchParams.get("url") || "";
+  if (!url) {
+    return NextResponse.json({ error: "URL is required" }, { status: 400 });
+  }
+  const summaryRes = await fetch(`https://r.jina.ai/${url}`, {
+    method: "GET",
     headers: {
-      "Accept": "application/json",
+      Accept: "application/json",
     },
   });
   if (!summaryRes.ok) {
     throw new Error("Failed to fetch summary");
   }
-  const summary = await summaryRes.text();
-  if (!summary) {
-    return NextResponse.json({ error: "No summary found" }, { status: 404 });
-  }
-  console.log("Summary:", summary);
-  return NextResponse.json({ summary });
+  const summaryData = await summaryRes.json();
+  return NextResponse.json({ summary: summaryData.data?.content });
 }
