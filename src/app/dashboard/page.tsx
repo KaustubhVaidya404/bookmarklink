@@ -61,6 +61,7 @@ export default function Dashboard() {
     return () => checkAuth();
   }, [router]);
 
+  // loads bookmarked links data from firebase firestore
   async function loadBookmarks() {
     setIsFetching(true);
     try {
@@ -85,6 +86,7 @@ export default function Dashboard() {
     }
   }
 
+  // creates document in firebase firestore
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     if (!url) return;
@@ -130,6 +132,7 @@ export default function Dashboard() {
     }
   }
 
+  // deletes document from firebase firestore
   async function handleDelete(id: string) {
     try {
       await deleteDoc(doc(db, "users", user!.uid, "links", id));
