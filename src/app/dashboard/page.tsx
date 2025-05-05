@@ -36,6 +36,7 @@ interface BookmarkItem {
   title: string;
   favicon: string;
   summary: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createdAt: any;
 }
 

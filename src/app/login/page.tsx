@@ -22,7 +22,7 @@ export default function Login() {
       if (user) router.push("/dashboard");
     });
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   const handleGoogleSignIn = async () => {
     try {
