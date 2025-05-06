@@ -124,7 +124,7 @@ export default function Dashboard() {
 
       setUrl("");
       setTag("");
-      await loadBookmarks();
+      await loadBookmarks(user!);
     } catch (error) {
       console.error("Error saving bookmark:", error);
     } finally {
@@ -136,7 +136,7 @@ export default function Dashboard() {
   async function handleDelete(id: string) {
     try {
       await deleteDoc(doc(db, "users", user!.uid, "links", id));
-      await loadBookmarks();
+      await loadBookmarks(user!);
     } catch (error) {
       console.error("Error deleting bookmark:", error);
     }
