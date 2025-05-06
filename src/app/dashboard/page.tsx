@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -155,7 +154,7 @@ export default function Dashboard() {
             <CardContent> 
               <form onSubmit={handleSave} className="space-y-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="url">URL</Label>
+                  <Label htmlFor="url"></Label>
                   <Input
                     id="url"
                     type="url"
@@ -166,7 +165,7 @@ export default function Dashboard() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="tag">Tag (optional)</Label>
+                  <Label htmlFor="tag"></Label>
                   <Input
                     id="tag"
                     value={tag}
