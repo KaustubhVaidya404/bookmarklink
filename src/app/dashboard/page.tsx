@@ -24,7 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "firebase/auth";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
-import { MovingBorder, MovingButton } from "@/components/ui/moving-border";
+import { MovingButton } from "@/components/ui/moving-border";
 
 interface BookmarkItem {
   id: string;
