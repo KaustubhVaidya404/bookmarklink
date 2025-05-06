@@ -1,4 +1,5 @@
 "use client";
+import { BackgroundLines } from "@/components/ui/background-lines";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,30 +34,32 @@ export default function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
-            LinkBookMark
-          </CardTitle>
-          <CardDescription className="text-center">
-            Sign in to access your smart bookmarks
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <Button
-            onClick={handleGoogleSignIn}
-            className="w-full"
-            variant="outline"
-          >
-            <FcGoogle className="mr-2 h-4 w-4" />
-            Sign in with Google
-          </Button>
-        </CardContent>
-        <CardFooter className="flex flex-col items-center justify-center text-sm text-muted-foreground">
-          <p>Your bookmarks, enhanced with AI summaries</p>
-        </CardFooter>
-      </Card>
-    </div>
+    <BackgroundLines>
+      <div className="flex items-center justify-center min-h-screen bg-background p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-center">
+              LinkBookMark
+            </CardTitle>
+            <CardDescription className="text-center">
+              Sign in to access your smart bookmarks
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <Button
+              onClick={handleGoogleSignIn}
+              className="w-full relative z-20"
+              variant="outline"
+            >
+              <FcGoogle className="mr-2 h-4 w-4" />
+              Sign in with Google
+            </Button>
+          </CardContent>
+          <CardFooter className="flex flex-col items-center justify-center text-sm text-muted-foreground">
+            <p>Your bookmarks, enhanced with AI summaries</p>
+          </CardFooter>
+        </Card>
+      </div>
+    </BackgroundLines>
   );
 }
