@@ -29,6 +29,7 @@ import { Bookmark, ExternalLink, Loader2, Tag, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "firebase/auth";
+import { BackgroundGradient } from "@/components/ui/background-gradient";
 
 interface BookmarkItem {
   id: string;
@@ -58,10 +59,10 @@ export default function Dashboard() {
         loadBookmarks(user);
       }
     });
-  
+
     return () => unsubscribe();
   }, [router]);
-  
+
   // loads bookmarked links data from firebase firestore
   async function loadBookmarks(user: User) {
     setIsFetching(true);
@@ -70,13 +71,13 @@ export default function Dashboard() {
         collection(db, "users", user.uid, "links"),
         orderBy("createdAt", "desc")
       );
-  
+
       const snapshot = await getDocs(q);
       const items = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as BookmarkItem[];
-  
+
       setLinks(items);
     } catch (error) {
       console.error("Error loading bookmarks:", error);
@@ -84,7 +85,6 @@ export default function Dashboard() {
       setIsFetching(false);
     }
   }
-  
 
   // creates document in firebase firestore
   async function handleSave(e: React.FormEvent) {
@@ -147,55 +147,54 @@ export default function Dashboard() {
       <Navbar />
 
       <main className="container py-4 md:py-6 space-y-6 md:space-y-8 px-4 md:px-6">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>Add New Bookmark</CardTitle>
-            <CardDescription>
-              Save a URL to generate an AI summary
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSave} className="space-y-4">
-              <div className="grid gap-2">
-                <Label htmlFor="url">URL</Label>
-                <Input
-                  id="url"
-                  type="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="tag">Tag (optional)</Label>
-                <Input
-                  id="tag"
-                  value={tag}
-                  onChange={(e) => setTag(e.target.value)}
-                  placeholder="e.g., article, tutorial, reference"
-                />
-              </div>
-              <Button
-                type="submit"
-                disabled={isLoading || !url}
-                className="w-full sm:w-auto"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Processing
-                  </>
-                ) : (
-                  <>
-                    <Bookmark className="mr-2 h-4 w-4" />
-                    Save Bookmark
-                  </>
-                )}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        <BackgroundGradient className="m-4">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle>Add New Bookmark</CardTitle>
+            </CardHeader>
+            <CardContent> 
+              <form onSubmit={handleSave} className="space-y-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="url">URL</Label>
+                  <Input
+                    id="url"
+                    type="url"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    placeholder="https://example.com"
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="tag">Tag (optional)</Label>
+                  <Input
+                    id="tag"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                    placeholder="e.g., article, tutorial, reference"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={isLoading || !url}
+                  className="w-full sm:w-auto"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark className="mr-2 h-4 w-4" />
+                      Save Bookmark
+                    </>
+                  )}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </BackgroundGradient>
 
         <div className="space-y-4">
           <h2 className="text-xl md:text-2xl font-bold">Your Bookmarks</h2>
@@ -224,74 +223,76 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           ) : (
-            <div className="grid gap-4">
-              {links.map((bookmark) => (
-                <Card key={bookmark.id}>
-                  <CardContent className="p-4 md:p-6">
-                    <div className="flex flex-col sm:flex-row items-start gap-3 md:gap-4">
-                      <div className="h-8 w-8 md:h-10 md:w-10 rounded-md border flex items-center justify-center bg-muted shrink-0">
-                        {bookmark.favicon ? (
-                          <img
-                            src={bookmark.favicon || "/placeholder.svg"}
-                            alt=""
-                            className="h-5 w-5 md:h-6 md:w-6 object-contain"
-                          />
-                        ) : (
-                          <Bookmark className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground" />
-                        )}
-                      </div>
-                      <div className="flex-1 space-y-2 w-full">
-                        <div className="flex items-start justify-between gap-2 flex-wrap sm:flex-nowrap">
-                          <h3 className="font-medium leading-tight break-words w-full sm:w-auto">
-                            {bookmark.title || "Untitled Bookmark"}
-                          </h3>
-                          <div className="flex items-center gap-1 sm:gap-2 mt-1 sm:mt-0 ml-auto">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              asChild
-                              className="h-7 w-7 md:h-8 md:w-8"
-                            >
-                              <a
-                                href={bookmark.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <ExternalLink className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                                <span className="sr-only">Open link</span>
-                              </a>
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7 md:h-8 md:w-8 text-destructive"
-                              onClick={() => handleDelete(bookmark.id)}
-                            >
-                              <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                              <span className="sr-only">Delete</span>
-                            </Button>
-                          </div>
+            <BackgroundGradient className="m-4">
+              <div className="grid gap-4">
+                {links.map((bookmark) => (
+                  <Card key={bookmark.id}>
+                    <CardContent className="p-4 md:p-6">
+                      <div className="flex flex-col sm:flex-row items-start gap-3 md:gap-4">
+                        <div className="h-8 w-8 md:h-10 md:w-10 rounded-md border flex items-center justify-center bg-muted shrink-0">
+                          {bookmark.favicon ? (
+                            <img
+                              src={bookmark.favicon || "/placeholder.svg"}
+                              alt=""
+                              className="h-5 w-5 md:h-6 md:w-6 object-contain"
+                            />
+                          ) : (
+                            <Bookmark className="h-5 w-5 md:h-6 md:w-6 text-muted-foreground" />
+                          )}
                         </div>
-
-                        {bookmark.tag && (
-                          <div className="flex items-center gap-1">
-                            <Badge variant="outline" className="text-xs">
-                              <Tag className="mr-1 h-3 w-3" />
-                              {bookmark.tag}
-                            </Badge>
+                        <div className="flex-1 space-y-2 w-full">
+                          <div className="flex items-start justify-between gap-2 flex-wrap sm:flex-nowrap">
+                            <h3 className="font-medium leading-tight break-words w-full sm:w-auto">
+                              {bookmark.title || "Untitled Bookmark"}
+                            </h3>
+                            <div className="flex items-center gap-1 sm:gap-2 mt-1 sm:mt-0 ml-auto">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                asChild
+                                className="h-7 w-7 md:h-8 md:w-8"
+                              >
+                                <a
+                                  href={bookmark.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <ExternalLink className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                                  <span className="sr-only">Open link</span>
+                                </a>
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 md:h-8 md:w-8 text-destructive"
+                                onClick={() => handleDelete(bookmark.id)}
+                              >
+                                <Trash2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                                <span className="sr-only">Delete</span>
+                              </Button>
+                            </div>
                           </div>
-                        )}
 
-                        <p className="text-xs sm:text-sm text-muted-foreground break-words">
-                          {bookmark.summary?.slice(0, 150)}
-                          {bookmark.summary?.length > 150 ? "..." : ""}
-                        </p>
+                          {bookmark.tag && (
+                            <div className="flex items-center gap-1">
+                              <Badge variant="outline" className="text-xs">
+                                <Tag className="mr-1 h-3 w-3" />
+                                {bookmark.tag}
+                              </Badge>
+                            </div>
+                          )}
+
+                          <p className="text-xs sm:text-sm text-muted-foreground break-words">
+                            {bookmark.summary?.slice(0, 150)}
+                            {bookmark.summary?.length > 150 ? "..." : ""}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </BackgroundGradient>
           )}
         </div>
       </main>
