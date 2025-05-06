@@ -28,6 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Bookmark, ExternalLink, Loader2, Tag, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { User } from "firebase/auth";
 
 interface BookmarkItem {
   id: string;
