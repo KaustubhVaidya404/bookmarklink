@@ -50,34 +50,32 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) {
         router.push("/login");
       } else {
-        loadBookmarks();
+        loadBookmarks(user);
       }
     });
-
-    return () => checkAuth();
+  
+    return () => unsubscribe();
   }, [router]);
-
+  
   // loads bookmarked links data from firebase firestore
-  async function loadBookmarks() {
+  async function loadBookmarks(user: User) {
     setIsFetching(true);
     try {
-      if (!user) return;
-
       const q = query(
         collection(db, "users", user.uid, "links"),
         orderBy("createdAt", "desc")
       );
-
+  
       const snapshot = await getDocs(q);
       const items = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       })) as BookmarkItem[];
-
+  
       setLinks(items);
     } catch (error) {
       console.error("Error loading bookmarks:", error);
@@ -85,6 +83,7 @@ export default function Dashboard() {
       setIsFetching(false);
     }
   }
+  
 
   // creates document in firebase firestore
   async function handleSave(e: React.FormEvent) {
