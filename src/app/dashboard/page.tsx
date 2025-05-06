@@ -17,18 +17,14 @@ import { useEffect, useState } from "react";
 import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Bookmark, ExternalLink, Loader2, Tag, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "firebase/auth";
 import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { MovingBorder, MovingButton } from "@/components/ui/moving-border";
 
 interface BookmarkItem {
   id: string;
@@ -151,7 +147,7 @@ export default function Dashboard() {
             <CardHeader className="pb-2">
               <CardTitle>Add New Bookmark</CardTitle>
             </CardHeader>
-            <CardContent> 
+            <CardContent>
               <form onSubmit={handleSave} className="space-y-4">
                 <div className="grid gap-2">
                   <Label htmlFor="url"></Label>
@@ -173,23 +169,23 @@ export default function Dashboard() {
                     placeholder="e.g., article, tutorial, reference"
                   />
                 </div>
-                <Button
-                  type="submit"
-                  disabled={isLoading || !url}
-                  className="w-full sm:w-auto"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Processing
-                    </>
-                  ) : (
-                    <>
-                      <Bookmark className="mr-2 h-4 w-4" />
-                      Save Bookmark
-                    </>
-                  )}
-                </Button>
+                  <MovingButton
+                    type="submit"
+                    disabled={isLoading || !url}
+                    className="w-full sm:w-auto"
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing
+                      </>
+                    ) : (
+                      <>
+                        <Bookmark className="mr-2 h-4 w-4" />
+                        Save Bookmark
+                      </>
+                    )}
+                  </MovingButton>
               </form>
             </CardContent>
           </Card>
